@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name" translatable="false">proyectoUD3</string>
+    <string name="cabeceraSuper">SUPERMERCADO PABLO</string>
+    <string name="switchTodo" translatable="false">Todos</string>
+    <string name="switchDisponible">Disponibles</string>
+    <string name="btnCatalogo" translatable="false">Catálogo</string>
+    <string name="btnCesta" translatable="false">Cesta</string>
+    <string name="euro" translatable="false">€</string>
+    <string name="txtBtnAñadir">Añadir al carrito</string>
+    <string name="unidadesRestantes" translatable="false">Ud. restantes</string>
+    <string name="btnQuitar" translatable="false">Eliminar</string>
+</resources>
