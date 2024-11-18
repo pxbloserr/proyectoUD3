@@ -3,4 +3,5 @@
     <string name="cabeceraSuper">SUPERMERCADO PABLIÑO</string>
     <string name="switchDisponible">Dispoñible</string>
     <string name="txtBtnAñadir">Engadir á cesta</string>
+    <string name="cestaVacia">A cesta está valeira</string>
 </resources>

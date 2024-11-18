@@ -9,4 +9,5 @@
     <string name="txtBtnAñadir">Añadir al carrito</string>
     <string name="unidadesRestantes" translatable="false">Ud. restantes</string>
     <string name="btnQuitar" translatable="false">Eliminar</string>
+    <string name="cestaVacia">La cesta está vacía</string>
 </resources>

@@ -122,6 +122,11 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
             Toast.makeText(MainActivity.this, producto.getNombre() + " eliminado correctamente de la cesta", Toast.LENGTH_SHORT).show();
 
+            if(cesta.isEmpty()){
+                TextView tv_cestaVacia = findViewById(R.id.tv_cestaVacia);
+                tv_cestaVacia.setVisibility(View.VISIBLE);
+            }
+
         }
 
     }
