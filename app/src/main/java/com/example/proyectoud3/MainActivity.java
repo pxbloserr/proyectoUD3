@@ -2,6 +2,7 @@ package com.example.proyectoud3;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -92,8 +93,14 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             Toast.makeText(MainActivity.this, producto.getNombre() + " eliminado correctamente de la cesta", Toast.LENGTH_SHORT).show();
 
             if(cesta.isEmpty()){
+
                 TextView tv_cestaVacia = findViewById(R.id.tv_cestaVacia);
                 tv_cestaVacia.setVisibility(View.VISIBLE);
+
+                RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+                rvCatalogo.setPadding(0, 0, 0, 0);
+                rvCatalogo.setVisibility(View.INVISIBLE);
+
             }
 
         }
@@ -165,8 +172,18 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
     private void cargarRecyclerViewCatalogo(ArrayList <Producto> productos){
 
-        AdaptadorProducto adaptadorProducto = new AdaptadorProducto(productos, MainActivity.this);
         RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+
+        int value = 111;
+        int dpValue = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                value,
+                MainActivity.this.getResources().getDisplayMetrics());
+
+        rvCatalogo.setPadding(0, 0, 0, dpValue);
+        rvCatalogo.setVisibility(View.VISIBLE);
+
+        AdaptadorProducto adaptadorProducto = new AdaptadorProducto(productos, MainActivity.this);
         rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
         rvCatalogo.setAdapter(adaptadorProducto);
 
@@ -174,8 +191,11 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
     private void cargarRecyclerViewCesta(ArrayList <Producto> cesta){
 
-        AdaptadorCesta adaptadorCesta = new AdaptadorCesta(cesta, MainActivity.this);
         RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+        rvCatalogo.setPadding(0, 0, 0, 128);
+        rvCatalogo.setVisibility(View.VISIBLE);
+
+        AdaptadorCesta adaptadorCesta = new AdaptadorCesta(cesta, MainActivity.this);
         rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
         rvCatalogo.setAdapter(adaptadorCesta);
 
