@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
         RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
 
-        int value = 111;
+        int value = 135;
         int dpValue = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 value,
@@ -192,7 +192,13 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
     private void cargarRecyclerViewCesta(ArrayList <Producto> cesta){
 
         RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
-        rvCatalogo.setPadding(0, 0, 0, 128);
+        int value = 135;
+        int dpValue = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                value,
+                MainActivity.this.getResources().getDisplayMetrics());
+
+        rvCatalogo.setPadding(0, 0, 0, dpValue);
         rvCatalogo.setVisibility(View.VISIBLE);
 
         AdaptadorCesta adaptadorCesta = new AdaptadorCesta(cesta, MainActivity.this);
