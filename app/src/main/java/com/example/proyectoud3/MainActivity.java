@@ -23,11 +23,12 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements AdaptadorProducto.OnItemClickListenerCatalogo, AdaptadorCesta.OnItemClickListenerCesta{
 
-    ArrayList <Producto> productos;
-    ArrayList <Producto> cesta = new ArrayList<>();
+    ArrayList <Producto> productos; // se almacenan los productos totales del catálogo
+    ArrayList <Producto> cesta = new ArrayList<>(); //se almacenan los productos que se agregan a la cesta
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -37,29 +38,32 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             return insets;
         });
 
-        productos = cargarProductos ();
+        productos = cargarProductos (); //se cargan los productos y se guardan en la lista
 
-        ocultarSwitch();
+        ocultarSwitch(); //se oculta el switch ya que al no mostrar productos al principio de la ejecución, no tiene sentido mostrar el filtro
 
+        //se crea el switch y se crea el Listener
         Switch switch1 = findViewById(R.id.switchTodo);
         switch1.setChecked(false);
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //en caso de estar activo, solo tendrá que mostrar los productos disponibles (ud. restantes > 0)
                 if (isChecked){
-                    ArrayList <Producto> disponibles = new ArrayList <Producto> ();
+                    ArrayList <Producto> disponibles = new ArrayList <Producto> (); //lista que guarda los productos dispononibles
                     for(Producto p : productos){
+                        //si las ud. restantes > 0 se agrega a la lista de disponibles
                         if(p.getUdRestantes() > 0){
                             disponibles.add(p);
                         }
                     }
 
-                    cargarRecyclerViewCatalogo(disponibles);
+                    cargarRecyclerViewCatalogo(disponibles); //carga el recyclerView del catálogo actualizado con los productos disponibles
 
                 }
                 else {
-
-                    cargarRecyclerViewCatalogo(productos);
+                    //en caso de no estar activo, se cargarán todos los productos del catálogo
+                    cargarRecyclerViewCatalogo(productos); //carga el recyclerView con todo el catálogo
 
                 }
 
@@ -69,9 +73,10 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
     }
 
+    //metodo que gestiona el click de botón de añadir al carrito
     @Override
     public void onItemClickCatalogo(View view, int position) {
-        Producto producto = productos.get(position);
+        Producto producto = productos.get(position); //crea el producto en base a los datos del cardView donde se hizo click
         if(producto.getUdRestantes() > 0){
             cesta.add(producto);
             Toast.makeText(MainActivity.this, producto.getNombre() + " añadido correctamente a la cesta", Toast.LENGTH_SHORT).show();
