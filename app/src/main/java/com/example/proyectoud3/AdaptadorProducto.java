@@ -63,6 +63,7 @@ public class AdaptadorProducto extends RecyclerView.Adapter <AdaptadorProducto.P
             tv_unidades = itemView.findViewById(R.id.tv_restantes);
             btn_agregar = itemView.findViewById(R.id.btnAgregar);
 
+            //se añade el listener al botón
             btn_agregar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -76,8 +77,9 @@ public class AdaptadorProducto extends RecyclerView.Adapter <AdaptadorProducto.P
 
     }
 
+    //interfaz que define el método onClick del botón de añadir a la cesta
     public interface OnItemClickListenerCatalogo {
-        public void onItemClickCatalogo (View view, int position);
+        void onItemClickCatalogo (View view, int position);
 
     }
 
