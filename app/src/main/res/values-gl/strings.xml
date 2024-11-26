@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">TeuSuper</string>
     <string name="cabeceraSuper">SUPERMERCADO PABLIÑO</string>
     <string name="switchDisponible">Dispoñible</string>
     <string name="txtBtnAñadir">Engadir á cesta</string>
     <string name="cestaVacia">A cesta está valeira</string>
+    <string name="txtEliminar">eliminado correctamente da cesta</string>
+    <string name="txtNoHay">Non hai</string>
+    <string name="txtAgregadoCorrecto">engadido correctamente á cesta</string>
 </resources>

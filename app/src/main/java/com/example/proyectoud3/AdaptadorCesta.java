@@ -77,7 +77,7 @@ public class AdaptadorCesta extends RecyclerView.Adapter <AdaptadorCesta.CestaVi
     }
 
     public interface OnItemClickListenerCesta {
-        public void onItemClickCesta(View view, int position);
+        void onItemClickCesta(View view, int position);
     }
 
 }

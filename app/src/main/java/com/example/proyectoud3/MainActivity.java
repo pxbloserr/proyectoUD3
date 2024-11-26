@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         Producto producto = productos.get(position); //crea el producto en base a los datos del cardView donde se hizo click
         if(producto.getUdRestantes() > 0){
             cesta.add(producto);
-            Toast.makeText(MainActivity.this, producto.getNombre() + " añadido correctamente a la cesta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, producto.getNombre() + " " + getString(R.string.txtAgregadoCorrecto), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(MainActivity.this, "No hay " + producto.getNombre(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getString(R.string.txtNoHay)  + " " + producto.getNombre(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             cargarRecyclerViewCesta(cesta);
 
             //lanza toast con mensaje de información
-            Toast.makeText(MainActivity.this, producto.getNombre() + " eliminado correctamente de la cesta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, producto.getNombre()  + " " +  getString(R.string.txtEliminar), Toast.LENGTH_SHORT).show();
 
             //si la cesta desopues de eliminar algun producto queda vacía, entra a este bloque de código
             if(cesta.isEmpty()){
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
             } else {
                 //lanza toast de información en caso de estar la cesta vacía
-                Toast.makeText(MainActivity.this, "La cesta está vacía", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, getString(R.string.cestaVacia), Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -216,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         rvCatalogo.setAdapter(adaptadorProducto);
 
     }
+
     //método que carga el recyclerView con el adaptador de la cesta
     private void cargarRecyclerViewCesta(ArrayList <Producto> cesta){
 
