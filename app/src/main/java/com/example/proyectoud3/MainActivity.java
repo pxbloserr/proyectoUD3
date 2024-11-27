@@ -23,11 +23,12 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements AdaptadorProducto.OnItemClickListenerCatalogo, AdaptadorCesta.OnItemClickListenerCesta{
 
-    ArrayList <Producto> productos;
-    ArrayList <Producto> cesta = new ArrayList<>();
+    ArrayList <Producto> productos; // se almacenan los productos totales del catálogo
+    ArrayList <Producto> cesta = new ArrayList<>(); //se almacenan los productos que se agregan a la cesta
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -37,29 +38,32 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             return insets;
         });
 
-        productos = cargarProductos ();
+        productos = cargarProductos (); //se cargan los productos y se guardan en la lista
 
-        ocultarSwitch();
+        ocultarSwitch(); //se oculta el switch ya que al no mostrar productos al principio de la ejecución, no tiene sentido mostrar el filtro
 
+        //se crea el switch y se crea el Listener
         Switch switch1 = findViewById(R.id.switchTodo);
         switch1.setChecked(false);
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //en caso de estar activo, solo tendrá que mostrar los productos disponibles (ud. restantes > 0)
                 if (isChecked){
-                    ArrayList <Producto> disponibles = new ArrayList <Producto> ();
+                    ArrayList <Producto> disponibles = new ArrayList <Producto> (); //lista que guarda los productos dispononibles
                     for(Producto p : productos){
+                        //si las ud. restantes > 0 se agrega a la lista de disponibles
                         if(p.getUdRestantes() > 0){
                             disponibles.add(p);
                         }
                     }
 
-                    cargarRecyclerViewCatalogo(disponibles);
+                    cargarRecyclerViewCatalogo(disponibles); //carga el recyclerView del catálogo actualizado con los productos disponibles
 
                 }
                 else {
-
-                    cargarRecyclerViewCatalogo(productos);
+                    //en caso de no estar activo, se cargarán todos los productos del catálogo
+                    cargarRecyclerViewCatalogo(productos); //carga el recyclerView con todoo el catálogo
 
                 }
 
@@ -69,34 +73,43 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
     }
 
+    //metodo que gestiona el click de botón de añadir al carrito
     @Override
     public void onItemClickCatalogo(View view, int position) {
-        Producto producto = productos.get(position);
+        Producto producto = productos.get(position); //crea el producto en base a los datos del cardView donde se hizo click
         if(producto.getUdRestantes() > 0){
             cesta.add(producto);
-            Toast.makeText(MainActivity.this, producto.getNombre() + " añadido correctamente a la cesta", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, producto.getNombre() + " " + getString(R.string.txtAgregadoCorrecto), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(MainActivity.this, "No hay " + producto.getNombre(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getString(R.string.txtNoHay)  + " " + producto.getNombre(), Toast.LENGTH_SHORT).show();
         }
     }
 
+    //método que gestiona el click de botón eliminar del carrito
     @Override
     public void onItemClickCesta(View view, int position) {
 
+        //si la cesta no está vacía ejecuta el bloque de código
         if(!cesta.isEmpty()){
 
+            //borra el producto de la cesta
             Producto producto = cesta.get(position);
             cesta.remove(producto);
 
+            //carca el recyclerView con la cesta actualizada
             cargarRecyclerViewCesta(cesta);
 
-            Toast.makeText(MainActivity.this, producto.getNombre() + " eliminado correctamente de la cesta", Toast.LENGTH_SHORT).show();
+            //lanza toast con mensaje de información
+            Toast.makeText(MainActivity.this, producto.getNombre()  + " " +  getString(R.string.txtEliminar), Toast.LENGTH_SHORT).show();
 
+            //si la cesta desopues de eliminar algun producto queda vacía, entra a este bloque de código
             if(cesta.isEmpty()){
 
+                //hace visible la etiqueta de información
                 TextView tv_cestaVacia = findViewById(R.id.tv_cestaVacia);
                 tv_cestaVacia.setVisibility(View.VISIBLE);
 
+                //hace invidible el recyclerView, y cambia el padding para que la etiqueta aparezca arriba
                 RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
                 rvCatalogo.setPadding(0, 0, 0, 0);
                 rvCatalogo.setVisibility(View.INVISIBLE);
@@ -107,50 +120,61 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
     }
 
+    //método que gestiona el adaptador que utiliza el recyclerView para saber si se está en el catálogo o en la cesta
     public void cambiarVista(View view) {
 
         Button boton = findViewById(view.getId());
         Log.i("PRUEBA", boton.getText().toString());
         Log.i("PRUEBA", getString(R.string.btnCatalogo));
 
+        /*
+            si el botón tiene de texto 'catálogo' (o su valor equivalente, dependiendo del idioma),
+            quiere decir que tiene que mostrar el catálogo, ejecuta este bloque de código
+         */
         if(boton.getText().toString().equals(getString(R.string.btnCatalogo))){
 
             Log.i("PRUEBA", "ENTRA A CATALOGO");
 
+            //si el arrayList de productos está vacío no se carga
             if(!productos.isEmpty()){
 
+                //muestra el switch con filtro, carga el recyclerView con el catálogo y cambia el texto del botón
                 mostrarSwitch();
-
                 cargarRecyclerViewCatalogo(productos);
-
                 boton.setText(getString(R.string.btnCesta));
 
             }
 
         } else {
 
+            /*
+                en el caso de que el texto no sea 'catálogo' (o su valor equivalente, dependiendo del idioma),
+                quiere decir que tiene que mostrar la cesta
+             */
             Log.i("PRUEBA", "ENTRA A CESTA");
 
+            //si la cesta no está vacía ejecuta el bloque de código
             if(!cesta.isEmpty()){
 
+                //oculta el switch, carga el recyclerView con los productos en la cesta y cambia el texto del botón
                 ocultarSwitch();
-
                 cargarRecyclerViewCesta(cesta);
-
                 boton.setText(getString(R.string.btnCatalogo));
 
             } else {
-                Toast.makeText(MainActivity.this, "La cesta está vacía", Toast.LENGTH_SHORT).show();
+                //lanza toast de información en caso de estar la cesta vacía
+                Toast.makeText(MainActivity.this, getString(R.string.cestaVacia), Toast.LENGTH_SHORT).show();
             }
 
         }
 
     }
 
+    //método que sirve para ocultar el switch del filtro
     private void ocultarSwitch(){
 
-        TextView tvTodo =findViewById(R.id.tvSwitchTodo);
-        TextView tvDisponible =findViewById(R.id.tvSwitchDisponible);
+        TextView tvTodo = findViewById(R.id.tvSwitchTodo);
+        TextView tvDisponible = findViewById(R.id.tvSwitchDisponible);
         Switch switch1 = findViewById(R.id.switchTodo);
 
         tvTodo.setVisibility(View.INVISIBLE);
@@ -159,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
     }
 
+    //método que sirve para mostrar el switch
     private void mostrarSwitch(){
 
         TextView tvTodo =findViewById(R.id.tvSwitchTodo);
@@ -170,11 +195,13 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         switch1.setVisibility(View.VISIBLE);
     }
 
+    //método que carga el recyclerView con el adaptador del catálogo
     private void cargarRecyclerViewCatalogo(ArrayList <Producto> productos){
 
         RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
 
-        int value = 111;
+        //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
+        int value = 135;
         int dpValue = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 value,
@@ -183,24 +210,36 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         rvCatalogo.setPadding(0, 0, 0, dpValue);
         rvCatalogo.setVisibility(View.VISIBLE);
 
+        //crea y aplica el adaptador y el diseño al recyclerView
         AdaptadorProducto adaptadorProducto = new AdaptadorProducto(productos, MainActivity.this);
         rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
         rvCatalogo.setAdapter(adaptadorProducto);
 
     }
 
+    //método que carga el recyclerView con el adaptador de la cesta
     private void cargarRecyclerViewCesta(ArrayList <Producto> cesta){
 
         RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
-        rvCatalogo.setPadding(0, 0, 0, 128);
+
+        //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
+        int value = 135;
+        int dpValue = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                value,
+                MainActivity.this.getResources().getDisplayMetrics());
+
+        rvCatalogo.setPadding(0, 0, 0, dpValue);
         rvCatalogo.setVisibility(View.VISIBLE);
 
+        //crea y aplica el adaptador y el diseño al recyclerView
         AdaptadorCesta adaptadorCesta = new AdaptadorCesta(cesta, MainActivity.this);
         rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
         rvCatalogo.setAdapter(adaptadorCesta);
 
     }
 
+    //método que devuelve el arrayList con todos los productos del catálogo
     private ArrayList <Producto> cargarProductos () {
 
         ArrayList <Producto> catalogo = new ArrayList<>(Arrays.asList(new Producto[]{
