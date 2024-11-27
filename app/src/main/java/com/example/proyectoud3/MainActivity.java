@@ -76,20 +76,28 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
     //metodo que gestiona el click de botón de añadir al carrito
     @Override
     public void onItemClickCatalogo(View view, int position) {
-        Producto producto = productos.get(position); //crea el producto en base a los datos del cardView donde se hizo click
-        if(producto.getUdRestantes() > 0){
-            cesta.add(producto);
-            Toast.makeText(MainActivity.this, producto.getNombre() + " " + getString(R.string.txtAgregadoCorrecto), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(MainActivity.this, getString(R.string.txtNoHay)  + " " + producto.getNombre(), Toast.LENGTH_SHORT).show();
+
+        //excepción ya que puede lanzar IndexOutOfBoundsException
+        try {
+            Producto producto = productos.get(position);
+            if (producto.getUdRestantes() > 0) {
+                cesta.add(producto);
+                Toast.makeText(MainActivity.this, producto.getNombre() + " " + getString(R.string.txtAgregadoCorrecto), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, getString(R.string.txtNoHay) + " " + producto.getNombre(), Toast.LENGTH_SHORT).show();
+            }
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(getString(R.string.tagLogs), getString(R.string.errorIndice), e);
         }
+
     }
 
     //método que gestiona el click de botón eliminar del carrito
     @Override
     public void onItemClickCesta(View view, int position) {
 
-        //si la cesta no está vacía ejecuta el bloque de código
+        try {
+        //si la cesta no está vacía ejecuta el bloque de código (no debería de hacer falta la comprobación pero por )
         if(!cesta.isEmpty()){
 
             //borra el producto de la cesta
@@ -102,20 +110,16 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             //lanza toast con mensaje de información
             Toast.makeText(MainActivity.this, producto.getNombre()  + " " +  getString(R.string.txtEliminar), Toast.LENGTH_SHORT).show();
 
-            //si la cesta desopues de eliminar algun producto queda vacía, entra a este bloque de código
+            //si la cesta despues de eliminar algun producto queda vacía, entra a este bloque de código
             if(cesta.isEmpty()){
 
-                //hace visible la etiqueta de información
-                TextView tv_cestaVacia = findViewById(R.id.tv_cestaVacia);
-                tv_cestaVacia.setVisibility(View.VISIBLE);
-
-                //hace invidible el recyclerView, y cambia el padding para que la etiqueta aparezca arriba
-                RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
-                rvCatalogo.setPadding(0, 0, 0, 0);
-                rvCatalogo.setVisibility(View.INVISIBLE);
+                mostrarCestaVacia();
 
             }
 
+        }
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(getString(R.string.tagLogs), getString(R.string.errorIndice), e);
         }
 
     }
@@ -129,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             si el botón tiene de texto 'catálogo' (o su valor equivalente, dependiendo del idioma),
             quiere decir que tiene que mostrar el catálogo, ejecuta este bloque de código
          */
+
         if(boton.getText().toString().equals(getString(R.string.btnCatalogo))){
 
             //si el arrayList de productos está vacío no se carga
@@ -165,6 +170,38 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
     }
 
+    private void mostrarCestaVacia (){
+
+        //hace visible la etiqueta de información
+        TextView tv_cestaVacia = findViewById(R.id.tv_cestaVacia);
+        tv_cestaVacia.setVisibility(View.VISIBLE);
+
+        //hace invidible el recyclerView, y cambia el padding para que la etiqueta aparezca arriba
+        RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+        rvCatalogo.setPadding(0, 0, 0, 0);
+        rvCatalogo.setVisibility(View.INVISIBLE);
+
+    }
+
+    private void ocultarCestaVacia (){
+
+        //hace INvisible la etiqueta de información
+        TextView tv_cestaVacia = findViewById(R.id.tv_cestaVacia);
+        tv_cestaVacia.setVisibility(View.INVISIBLE);
+
+        RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+        //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
+        int value = 135;
+        int dpValue = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                value,
+                MainActivity.this.getResources().getDisplayMetrics());
+
+        rvCatalogo.setPadding(0, 0, 0, dpValue);
+        rvCatalogo.setVisibility(View.VISIBLE);
+
+    }
+
     //método que sirve para ocultar el switch del filtro
     private void ocultarSwitch(){
 
@@ -193,84 +230,100 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
     //método que carga el recyclerView con el adaptador del catálogo
     private void cargarRecyclerViewCatalogo(ArrayList <Producto> productos){
 
-        RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+        try {
 
-        //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
-        int value = 135;
-        int dpValue = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                value,
-                MainActivity.this.getResources().getDisplayMetrics());
+            //comprueba que la lista no sea vacía
+            if (productos == null || productos.isEmpty()) {
+                Log.w(getString(R.string.tagLogs), getString(R.string.errorVacia));
+                return;
+            }
+            //oculta el mensaje de cesta vacía
+            ocultarCestaVacia();
 
-        rvCatalogo.setPadding(0, 0, 0, dpValue);
-        rvCatalogo.setVisibility(View.VISIBLE);
+            //crea y aplica el adaptador y el diseño al recyclerView
+            RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+            AdaptadorProducto adaptadorProducto = new AdaptadorProducto(productos, MainActivity.this);
+            rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+            rvCatalogo.setAdapter(adaptadorProducto);
 
-        //crea y aplica el adaptador y el diseño al recyclerView
-        AdaptadorProducto adaptadorProducto = new AdaptadorProducto(productos, MainActivity.this);
-        rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
-        rvCatalogo.setAdapter(adaptadorProducto);
+        } catch (Exception e) {
+            Log.e(getString(R.string.tagLogs), getString(R.string.errorRecyclerView), e);
+        }
 
     }
 
     //método que carga el recyclerView con el adaptador de la cesta
     private void cargarRecyclerViewCesta(ArrayList <Producto> cesta){
 
-        RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+        try {
 
-        //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
-        int value = 135;
-        int dpValue = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                value,
-                MainActivity.this.getResources().getDisplayMetrics());
+            //comprueba que la lista no sea vacía
+            if (cesta == null || cesta.isEmpty()) {
+                Log.w(getString(R.string.tagLogs), getString(R.string.errorVacia));
+                return;
+            }
+            //oculta el mensaje de cesta vacía
+            ocultarCestaVacia();
 
-        rvCatalogo.setPadding(0, 0, 0, dpValue);
-        rvCatalogo.setVisibility(View.VISIBLE);
+            //crea y aplica el adaptador y el diseño al recyclerView
+            RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+            AdaptadorCesta adaptadorCesta = new AdaptadorCesta(cesta, MainActivity.this);
+            rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+            rvCatalogo.setAdapter(adaptadorCesta);
 
-        //crea y aplica el adaptador y el diseño al recyclerView
-        AdaptadorCesta adaptadorCesta = new AdaptadorCesta(cesta, MainActivity.this);
-        rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
-        rvCatalogo.setAdapter(adaptadorCesta);
+        } catch (Exception e) {
+            Log.e(getString(R.string.tagLogs), getString(R.string.errorRecyclerView), e);
+        }
 
     }
 
     //método que devuelve el arrayList con todos los productos del catálogo
     private ArrayList <Producto> cargarProductos () {
 
-        ArrayList <Producto> catalogo = new ArrayList<>(Arrays.asList(new Producto[]{
-                new Producto("Pan de molde", 1.50, R.drawable.pan_de_molde, 15),
-                new Producto("Leche", 0.99, R.drawable.leche, 20),
-                new Producto("Huevos", 2.30, R.drawable.huevos, 0),
-                new Producto("Arroz", 1.10, R.drawable.arroz, 12),
-                new Producto("Pasta", 1.20, R.drawable.pasta, 8),
-                new Producto("Harina", 0.85, R.drawable.harina, 0),
-                new Producto("Azúcar", 1.00, R.drawable.azucar, 25),
-                new Producto("Sal", 0.60, R.drawable.sal, 18),
-                new Producto("Aceite de oliva", 4.50, R.drawable.aceite_de_oliva, 5),
-                new Producto("Aceite de girasol", 3.20, R.drawable.aceite_de_girasol, 10),
-                new Producto("Café", 2.50, R.drawable.cafe, 7),
-                new Producto("Té", 1.80, R.drawable.te, 12),
-                new Producto("Agua embotellada", 0.50, R.drawable.agua_embotellada, 30),
-                new Producto("Refrescos", 1.20, R.drawable.refrescos, 0),
-                new Producto("Jugo natural", 1.50, R.drawable.jugo_natural, 8),
-                new Producto("Mantequilla", 1.70, R.drawable.mantequilla, 10),
-                new Producto("Queso", 2.80, R.drawable.queso, 5),
-                new Producto("Yogur", 0.90, R.drawable.yogur, 20),
-                new Producto("Carne", 5.50, R.drawable.carne, 3),
-                new Producto("Pescado", 6.00, R.drawable.pescado, 2),
-                new Producto("Manzanas", 1.20, R.drawable.manzanas, 15),
-                new Producto("Zanahorias", 0.80, R.drawable.zanahorias, 18),
-                new Producto("Patatas", 0.70, R.drawable.patatas, 22),
-                new Producto("Cereal", 2.90, R.drawable.cereal, 7),
-                new Producto("Lentejas", 1.50, R.drawable.lentejas, 10),
-                new Producto("Detergente", 4.00, R.drawable.detergente, 5),
-                new Producto("Papel higiénico", 3.20, R.drawable.papel_higienico, 12),
-                new Producto("Pasta de dientes", 2.00, R.drawable.pasta_de_dientes, 0),
-                new Producto("Jabón líquido", 3.50, R.drawable.jabon_liquido, 8),
-                new Producto("Papel de cocina", 1.80, R.drawable.papel_de_cocina, 0)
-        }));
+        //por si salta algun error al cargar los datos
+        try {
 
-        return catalogo;
+            ArrayList <Producto> catalogo = new ArrayList<>(Arrays.asList(new Producto[]{
+                    new Producto("Pan de molde", 1.50, R.drawable.pan_de_molde, 15),
+                    new Producto("Leche", 0.99, R.drawable.leche, 20),
+                    new Producto("Huevos", 2.30, R.drawable.huevos, 0),
+                    new Producto("Arroz", 1.10, R.drawable.arroz, 12),
+                    new Producto("Pasta", 1.20, R.drawable.pasta, 8),
+                    new Producto("Harina", 0.85, R.drawable.harina, 0),
+                    new Producto("Azúcar", 1.00, R.drawable.azucar, 25),
+                    new Producto("Sal", 0.60, R.drawable.sal, 18),
+                    new Producto("Aceite de oliva", 4.50, R.drawable.aceite_de_oliva, 5),
+                    new Producto("Aceite de girasol", 3.20, R.drawable.aceite_de_girasol, 10),
+                    new Producto("Café", 2.50, R.drawable.cafe, 7),
+                    new Producto("Té", 1.80, R.drawable.te, 12),
+                    new Producto("Agua embotellada", 0.50, R.drawable.agua_embotellada, 30),
+                    new Producto("Refrescos", 1.20, R.drawable.refrescos, 0),
+                    new Producto("Jugo natural", 1.50, R.drawable.jugo_natural, 8),
+                    new Producto("Mantequilla", 1.70, R.drawable.mantequilla, 10),
+                    new Producto("Queso", 2.80, R.drawable.queso, 5),
+                    new Producto("Yogur", 0.90, R.drawable.yogur, 20),
+                    new Producto("Carne", 5.50, R.drawable.carne, 3),
+                    new Producto("Pescado", 6.00, R.drawable.pescado, 2),
+                    new Producto("Manzanas", 1.20, R.drawable.manzanas, 15),
+                    new Producto("Zanahorias", 0.80, R.drawable.zanahorias, 18),
+                    new Producto("Patatas", 0.70, R.drawable.patatas, 22),
+                    new Producto("Cereal", 2.90, R.drawable.cereal, 7),
+                    new Producto("Lentejas", 1.50, R.drawable.lentejas, 10),
+                    new Producto("Detergente", 4.00, R.drawable.detergente, 5),
+                    new Producto("Papel higiénico", 3.20, R.drawable.papel_higienico, 12),
+                    new Producto("Pasta de dientes", 2.00, R.drawable.pasta_de_dientes, 0),
+                    new Producto("Jabón líquido", 3.50, R.drawable.jabon_liquido, 8),
+                    new Producto("Papel de cocina", 1.80, R.drawable.papel_de_cocina, 0)
+            }));
+
+            return catalogo;
+
+        } catch (Exception e) {
+
+            Log.e("cargarProductos", "Error al cargar el catálogo de productos", e);
+            return new ArrayList<>();
+
+        }
 
     }
 

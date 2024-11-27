@@ -13,4 +13,8 @@
     <string name="txtEliminar">eliminado correctamente de la cesta</string>
     <string name="txtNoHay">No hay</string>
     <string name="txtAgregadoCorrecto">añadido correctamente a la cesta</string>
+    <string name="errorIndice" translatable="false">Error al acceder al índice del producto en el catálogo</string>
+    <string name="tagLogs" translatable="false">LOGS</string>
+    <string name="errorVacia" translatable="false">La lista de productos está vacía o es nula</string>
+    <string name="errorRecyclerView" translatable="false">Error al cargar el RecyclerView del catálogo</string>
 </resources>
