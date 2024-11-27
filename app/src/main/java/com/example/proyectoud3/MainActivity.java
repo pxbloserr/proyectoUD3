@@ -124,16 +124,12 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
     public void cambiarVista(View view) {
 
         Button boton = findViewById(view.getId());
-        Log.i("PRUEBA", boton.getText().toString());
-        Log.i("PRUEBA", getString(R.string.btnCatalogo));
 
         /*
             si el botón tiene de texto 'catálogo' (o su valor equivalente, dependiendo del idioma),
             quiere decir que tiene que mostrar el catálogo, ejecuta este bloque de código
          */
         if(boton.getText().toString().equals(getString(R.string.btnCatalogo))){
-
-            Log.i("PRUEBA", "ENTRA A CATALOGO");
 
             //si el arrayList de productos está vacío no se carga
             if(!productos.isEmpty()){
@@ -151,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
                 en el caso de que el texto no sea 'catálogo' (o su valor equivalente, dependiendo del idioma),
                 quiere decir que tiene que mostrar la cesta
              */
-            Log.i("PRUEBA", "ENTRA A CESTA");
 
             //si la cesta no está vacía ejecuta el bloque de código
             if(!cesta.isEmpty()){

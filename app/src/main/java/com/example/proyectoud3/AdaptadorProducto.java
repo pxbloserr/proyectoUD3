@@ -14,24 +14,29 @@ import java.util.ArrayList;
 
 public class AdaptadorProducto extends RecyclerView.Adapter <AdaptadorProducto.ProductoViewHolder> {
 
+    //atributos del adaptador
     ArrayList <Producto> catalogo;
     OnItemClickListenerCatalogo onItemClickListenerCatalogo;
 
+    //constructor del adaptador
     public AdaptadorProducto(ArrayList<Producto> catalogo, OnItemClickListenerCatalogo onItemClickListenerCatalogo) {
         this.catalogo = catalogo;
         this.onItemClickListenerCatalogo = onItemClickListenerCatalogo;
     }
 
+    //se crea el viewHolder con la clase ProductoViewHolder
     @NonNull
     @Override
     public AdaptadorProducto.ProductoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         AdaptadorProducto.ProductoViewHolder productoViewHolder =
+                //se infla el layout del recyclerView con el xml deseado
                 new ProductoViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.ficha_producto,parent,false)
                 );
         return productoViewHolder;
     }
 
+    //vincula los datos del producto con cada textView del diseño
     @Override
     public void onBindViewHolder(@NonNull AdaptadorProducto.ProductoViewHolder holder, int position) {
         Producto producto = catalogo.get(position);
@@ -41,19 +46,23 @@ public class AdaptadorProducto extends RecyclerView.Adapter <AdaptadorProducto.P
         holder.tv_unidades.setText(String.valueOf(producto.getUdRestantes()));
     }
 
+    //devuelve la cantidad de items de la lista
     @Override
     public int getItemCount() {
         return catalogo.size();
     }
 
+    //clase viewHolder
     public class ProductoViewHolder extends RecyclerView.ViewHolder{
 
+        //se declaran las vistas del diseño
         ImageView imageView;
         TextView tv_nombre;
         TextView tv_precio;
         TextView tv_unidades;
         Button btn_agregar;
 
+        //constructor
         public ProductoViewHolder(@NonNull View itemView) {
 
             super(itemView);
