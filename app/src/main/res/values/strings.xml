@@ -13,4 +13,6 @@
     <string name="txtEliminar">eliminado correctamente de la cesta</string>
     <string name="txtNoHay">No hay</string>
     <string name="txtAgregadoCorrecto">añadido correctamente a la cesta</string>
+    <string name="logVacio" translatable="false">La lista está vacía</string>
+    <string name="prueba">PRUEBA</string>
 </resources>
