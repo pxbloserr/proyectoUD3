@@ -16,4 +16,6 @@
     <string name="logVacio" translatable="false">La lista está vacía</string>
     <string name="prueba" translatable="false">PRUEBA</string>
     <string name="proximamente" translatable="false">Proximamente</string>
+    <string name="opcion1" translatable="false">Opción 1</string>
+    <string name="opcion2" translatable="false">Opción 2</string>
 </resources>

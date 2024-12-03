@@ -3,6 +3,9 @@ package com.example.proyectoud3;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -12,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -40,6 +44,21 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        //asociar menu contextual
+        TextView textView1 = (TextView) findViewById(R.id.tvCabecera);
+
+        // Asociamos un menú contextual al textView
+        registerForContextMenu(textView1);
+
+        //se añade el onClick Listener al tv para el menu popup
+        textView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopUpMenu(view);
+            }
+        });
+
 
         productos = cargarProductos (); //se cargan los productos y se guardan en la lista
 
@@ -101,6 +120,56 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
         });
 
+    }
+
+    //Método para asociar un menú emergente popup al pulsar en una vista
+    public void showPopUpMenu(View view) {
+
+        PopupMenu popupMenu = new PopupMenu(this,view);
+        MenuInflater menuInflater = popupMenu.getMenuInflater();
+        menuInflater.inflate(R.menu.mi_menu, popupMenu.getMenu());
+
+        // Manejador de clicks
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                if (item.getItemId() == R.id.op1){
+                    Toast.makeText(MainActivity.this, getString(R.string.opcion1), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, getString(R.string.opcion2), Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
+
+        // mostrarlo
+        popupMenu.show();
+
+    }
+
+    // Método para el menú contextual, donde sew asocia el menú contrextual al textView
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Opciones:");
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mi_menu, menu);
+    }
+
+    // Método para gestionar los eventos de los elementos del menú contextual
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.op1) {
+
+            Toast.makeText(MainActivity.this, getString(R.string.opcion1), Toast.LENGTH_SHORT).show();
+
+        } else {
+
+            Toast.makeText(MainActivity.this, getString(R.string.opcion2), Toast.LENGTH_SHORT).show();
+
+        }
+        return true;
     }
 
     //metodo que gestiona el click de botón de añadir al carrito
