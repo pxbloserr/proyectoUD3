@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         });
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
+        //se añaden las opciones del tabLayout
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
                 if(tab.getPosition() == 1){
 
-                    Snackbar snackbar = Snackbar.make(findViewById(R.id.main), String.valueOf(R.string.proximamente), Snackbar.LENGTH_SHORT);
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.main), getString(R.string.proximamente), Snackbar.LENGTH_SHORT);
                     snackbar.show();
 
                 }
@@ -126,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
     public void showPopUpMenu(View view) {
 
         PopupMenu popupMenu = new PopupMenu(this,view);
+
         MenuInflater menuInflater = popupMenu.getMenuInflater();
         menuInflater.inflate(R.menu.mi_menu, popupMenu.getMenu());
 
@@ -151,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
     // Método para el menú contextual, donde sew asocia el menú contrextual al textView
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Opciones:");
+        menu.setHeaderTitle("Context Menu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.mi_menu, menu);
     }
