@@ -18,6 +18,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -71,6 +74,33 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
         });
 
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                if(tab.getPosition() == 1){
+
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.main), String.valueOf(R.string.proximamente), Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+
+                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // Acción al deseleccionar una pestaña
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // Acción al volver a seleccionar una pestaña
+            }
+
+        });
+
     }
 
     //metodo que gestiona el click de botón de añadir al carrito
@@ -99,8 +129,8 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             //carca el recyclerView con la cesta actualizada
             cargarRecyclerViewCesta(cesta);
 
-            //lanza toast con mensaje de información
-            Toast.makeText(MainActivity.this, producto.getNombre()  + " " +  getString(R.string.txtEliminar), Toast.LENGTH_SHORT).show();
+            //lanza snackBar con mensaje de información
+            Snackbar.make(findViewById(R.id.main), producto.getNombre()  + " " +  getString(R.string.txtEliminar), Snackbar.LENGTH_SHORT).show();
 
             //si la cesta desopues de eliminar algun producto queda vacía, entra a este bloque de código
             if(cesta.isEmpty()){
@@ -133,8 +163,6 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
          */
         if(boton.getText().toString().equals(getString(R.string.btnCatalogo))){
 
-            Log.i(getString(R.string.prueba), "ENTRA A CATALOGO");
-
             //si el arrayList de productos está vacío no se carga
             if(!productos.isEmpty()){
 
@@ -151,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
                 en el caso de que el texto no sea 'catálogo' (o su valor equivalente, dependiendo del idioma),
                 quiere decir que tiene que mostrar la cesta
              */
-            Log.i(getString(R.string.prueba), "ENTRA A CESTA");
 
             //si la cesta no está vacía ejecuta el bloque de código
             if(!cesta.isEmpty()){
