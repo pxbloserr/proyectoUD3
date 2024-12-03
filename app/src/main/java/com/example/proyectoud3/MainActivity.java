@@ -1,5 +1,6 @@
 package com.example.proyectoud3;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
                 showPopUpMenu(view);
             }
         });
+
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
 
         productos = cargarProductos (); //se cargan los productos y se guardan en la lista
@@ -299,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
 
         //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
-        int value = 135;
+        int value = 180;
         int dpValue = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 value,
@@ -308,10 +311,19 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         rvCatalogo.setPadding(0, 0, 0, dpValue);
         rvCatalogo.setVisibility(View.VISIBLE);
 
-        //crea y aplica el adaptador y el diseño al recyclerView
-        AdaptadorProducto adaptadorProducto = new AdaptadorProducto(productos, MainActivity.this);
-        rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
-        rvCatalogo.setAdapter(adaptadorProducto);
+        int orientation = MainActivity.this.getResources().getConfiguration().orientation;
+
+        if(orientation == 1){ //vertical
+            //crea y aplica el adaptador y el diseño al recyclerView
+            AdaptadorProducto adaptadorProducto = new AdaptadorProducto(productos, MainActivity.this);
+            rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+            rvCatalogo.setAdapter(adaptadorProducto);
+        } else if (orientation == 2){ //horizontal
+            //crea y aplica el adaptador y el diseño al recyclerView
+            AdaptadorProducto adaptadorProducto = new AdaptadorProducto(productos, MainActivity.this);
+            rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 5));
+            rvCatalogo.setAdapter(adaptadorProducto);
+        }
 
     }
 
@@ -321,7 +333,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
 
         //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
-        int value = 135;
+        int value = 180;
         int dpValue = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 value,
