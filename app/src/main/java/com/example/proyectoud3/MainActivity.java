@@ -2,7 +2,6 @@ package com.example.proyectoud3;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -15,8 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentContainerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,9 +108,8 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
                 tv_cestaVacia.setVisibility(View.VISIBLE);
 
                 //hace invidible el recyclerView, y cambia el padding para que la etiqueta aparezca arriba
-                RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
-                rvCatalogo.setPadding(0, 0, 0, 0);
-                rvCatalogo.setVisibility(View.INVISIBLE);
+                FragmentContainerView contenedor = findViewById(R.id.fragmentContainerView);
+                contenedor.setVisibility(View.INVISIBLE);
 
             }
 
@@ -158,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
                 //oculta el switch, carga el recyclerView con los productos en la cesta y cambia el texto del botón
                 ocultarSwitch();
+                Log.e("Prueba", cesta.toString());
                 cargarRecyclerViewCesta(cesta);
                 boton.setText(getString(R.string.btnCatalogo));
 
@@ -198,44 +196,28 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
     //método que carga el recyclerView con el adaptador del catálogo
     private void cargarRecyclerViewCatalogo(ArrayList <Producto> productos){
 
-        RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("catalogo", productos);
 
-        //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
-        int value = 135;
-        int dpValue = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                value,
-                MainActivity.this.getResources().getDisplayMetrics());
-
-        rvCatalogo.setPadding(0, 0, 0, dpValue);
-        rvCatalogo.setVisibility(View.VISIBLE);
-
-        //crea y aplica el adaptador y el diseño al recyclerView
-        AdaptadorProducto adaptadorProducto = new AdaptadorProducto(productos, MainActivity.this);
-        rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
-        rvCatalogo.setAdapter(adaptadorProducto);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragmentContainerView, FragmentCatalogo.class, bundle)
+                .commit();
 
     }
 
     //método que carga el recyclerView con el adaptador de la cesta
     private void cargarRecyclerViewCesta(ArrayList <Producto> cesta){
 
-        RecyclerView rvCatalogo = findViewById(R.id.rvCatalogo);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("cesta", cesta);
 
-        //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
-        int value = 135;
-        int dpValue = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                value,
-                MainActivity.this.getResources().getDisplayMetrics());
-
-        rvCatalogo.setPadding(0, 0, 0, dpValue);
-        rvCatalogo.setVisibility(View.VISIBLE);
-
-        //crea y aplica el adaptador y el diseño al recyclerView
-        AdaptadorCesta adaptadorCesta = new AdaptadorCesta(cesta, MainActivity.this);
-        rvCatalogo.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
-        rvCatalogo.setAdapter(adaptadorCesta);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragmentContainerView, FragmentCatalogo.class, bundle)
+                .commit();
 
     }
 
