@@ -2,6 +2,7 @@ package com.example.proyectoud3;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -15,6 +16,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,13 +107,7 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             //si la cesta desopues de eliminar algun producto queda vacía, entra a este bloque de código
             if(cesta.isEmpty()){
 
-                //hace visible la etiqueta de información
-                TextView tv_cestaVacia = findViewById(R.id.tv_cestaVacia);
-                tv_cestaVacia.setVisibility(View.VISIBLE);
-
-                //hace invidible el recyclerView, y cambia el padding para que la etiqueta aparezca arriba
-                FragmentContainerView contenedor = findViewById(R.id.fragmentContainerView);
-                contenedor.setVisibility(View.INVISIBLE);
+                mostrarCestaVacia();
 
             }
 
@@ -196,13 +194,15 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
     //método que carga el recyclerView con el adaptador del catálogo
     private void cargarRecyclerViewCatalogo(ArrayList <Producto> productos){
 
+        ocultarCestaVacia();
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("catalogo", productos);
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .add(R.id.fragmentContainerView, FragmentCatalogo.class, bundle)
+                .replace(R.id.fragmentContainerView, FragmentCatalogo.class, bundle)
                 .commit();
 
     }
@@ -210,13 +210,17 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
     //método que carga el recyclerView con el adaptador de la cesta
     private void cargarRecyclerViewCesta(ArrayList <Producto> cesta){
 
+        ocultarCestaVacia();
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("cesta", cesta);
+
+        FragmentCesta fragmentoCesta = new FragmentCesta();
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .add(R.id.fragmentContainerView, FragmentCatalogo.class, bundle)
+                .replace(R.id.fragmentContainerView, FragmentCesta.class, bundle)
                 .commit();
 
     }
@@ -258,6 +262,33 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         }));
 
         return catalogo;
+
+    }
+
+    private void mostrarCestaVacia () {
+
+        RecyclerView rvCesta = findViewById(R.id.rvCesta);
+        rvCesta.setPadding(0, 0, 0, 0);
+
+        //hace visible la etiqueta de información
+        TextView tv_cestaVacia = findViewById(R.id.tv_cestaVacia);
+        tv_cestaVacia.setVisibility(View.VISIBLE);
+
+        //hace invidible el recyclerView, y cambia el padding para que la etiqueta aparezca arriba
+        FragmentContainerView contenedor = findViewById(R.id.fragmentContainerView);
+        contenedor.setVisibility(View.INVISIBLE);
+
+    }
+
+    private void ocultarCestaVacia () {
+
+        //hace visible la etiqueta de información
+        TextView tv_cestaVacia = findViewById(R.id.tv_cestaVacia);
+        tv_cestaVacia.setVisibility(View.INVISIBLE);
+
+        //hace invidible el recyclerView, y cambia el padding para que la etiqueta aparezca arriba
+        FragmentContainerView contenedor = findViewById(R.id.fragmentContainerView);
+        contenedor.setVisibility(View.VISIBLE);
 
     }
 

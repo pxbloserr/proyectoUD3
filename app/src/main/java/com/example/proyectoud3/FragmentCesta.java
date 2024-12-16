@@ -36,11 +36,10 @@ public class FragmentCesta extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentCesta.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentCesta newInstance(String param1, String param2) {
+    public static FragmentCesta newInstance(ArrayList <Producto> param1) {
         FragmentCesta fragment = new FragmentCesta();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, param1);
@@ -52,7 +51,7 @@ public class FragmentCesta extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            cesta = (ArrayList <Producto> ) getArguments().getSerializable(ARG_PARAM1);
+            cesta = (ArrayList <Producto>) getArguments().getSerializable(ARG_PARAM1);
         }
     }
 
@@ -60,9 +59,9 @@ public class FragmentCesta extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_catalogo, container, false);
-        AdaptadorProducto.OnItemClickListenerCatalogo listener = (AdaptadorProducto.OnItemClickListenerCatalogo) getActivity();
-        RecyclerView rvCatalogo = view.findViewById(R.id.rvCatalogo);
+        View view = inflater.inflate(R.layout.fragment_cesta, container, false);
+        AdaptadorCesta.OnItemClickListenerCesta listener = (AdaptadorCesta.OnItemClickListenerCesta) getActivity();
+        RecyclerView rvCatalogo = view.findViewById(R.id.rvCesta);
 
         //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
         int value = 135;
@@ -75,9 +74,9 @@ public class FragmentCesta extends Fragment {
         rvCatalogo.setVisibility(View.VISIBLE);
 
         //crea y aplica el adaptador y el diseño al recyclerView
-        AdaptadorProducto adaptadorProducto = new AdaptadorProducto(cesta, listener);
+        AdaptadorCesta adaptadorCesta = new AdaptadorCesta(cesta, listener);
         rvCatalogo.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        rvCatalogo.setAdapter(adaptadorProducto);
+        rvCatalogo.setAdapter(adaptadorCesta);
 
         return view;
     }
