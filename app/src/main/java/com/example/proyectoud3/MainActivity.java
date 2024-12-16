@@ -199,11 +199,14 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         Bundle bundle = new Bundle();
         bundle.putSerializable("catalogo", productos);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.fragmentContainerView, FragmentCatalogo.class, bundle)
-                .commit();
+        FragmentCatalogo fragmentoCatalogo = new FragmentCatalogo();
+        fragmentoCatalogo.setArguments(bundle);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentContainerView, fragmentoCatalogo);
+        transaction.addToBackStack(null); // Permite el retroceso al pulsar ”atrás”
+        transaction.commit();
 
     }
 
@@ -216,12 +219,13 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
         bundle.putSerializable("cesta", cesta);
 
         FragmentCesta fragmentoCesta = new FragmentCesta();
+        fragmentoCesta.setArguments(bundle);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.fragmentContainerView, FragmentCesta.class, bundle)
-                .commit();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentContainerView, fragmentoCesta);
+        transaction.addToBackStack(null); // Permite el retroceso al pulsar ”atrás”
+        transaction.commit();
 
     }
 
