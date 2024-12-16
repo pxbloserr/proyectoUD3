@@ -64,7 +64,7 @@ public class FragmentCatalogo extends Fragment {
         RecyclerView rvCatalogo = view.findViewById(R.id.rvCatalogo);
 
         //hace visible el recyclreView y aplica un padding-botom de 135dp, y se transporma de px a dp mediante el código de abajo
-        int value = 135;
+        int value = 300;
         int dpValue = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 value,
