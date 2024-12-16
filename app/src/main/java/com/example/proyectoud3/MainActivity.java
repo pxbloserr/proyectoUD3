@@ -3,6 +3,7 @@ package com.example.proyectoud3;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,6 +21,9 @@ import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +43,54 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
+        });
+
+        BottomNavigationView navigation = findViewById(R.id.bottomNavigationView);
+        navigation.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                boolean estado = false;
+
+                if (item.getItemId() == R.id.itemCatalogo){
+
+                    Log.i("PRUEBA", "ENTRA A CATALOGO");
+
+                    //si el arrayList de productos está vacío no se carga
+                    if(!productos.isEmpty()){
+
+                        //muestra el switch con filtro, carga el recyclerView con el catálogo y cambia el texto del botón
+                        mostrarSwitch();
+                        cargarRecyclerViewCatalogo(productos);
+                        estado = true;
+
+                    }
+
+                } else if (item.getItemId() == R.id.itemCesta){
+
+                    Log.i("PRUEBA", "ENTRA A CESTA");
+
+                    //si la cesta no está vacía ejecuta el bloque de código
+                    if(!cesta.isEmpty()){
+
+                        //oculta el switch, carga el recyclerView con los productos en la cesta y cambia el texto del botón
+                        ocultarSwitch();
+                        Log.e("Prueba", cesta.toString());
+                        cargarRecyclerViewCesta(cesta);
+                        estado = true;
+
+                    } else {
+                        //lanza toast de información en caso de estar la cesta vacía
+                        Toast.makeText(MainActivity.this, getString(R.string.cestaVacia), Toast.LENGTH_SHORT).show();
+                        estado = false;
+                    }
+
+                }
+
+                return estado;
+
+            }
+
         });
 
         productos = cargarProductos (); //se cargan los productos y se guardan en la lista
@@ -109,57 +162,6 @@ public class MainActivity extends AppCompatActivity implements AdaptadorProducto
 
                 mostrarCestaVacia();
 
-            }
-
-        }
-
-    }
-
-    //método que gestiona el adaptador que utiliza el recyclerView para saber si se está en el catálogo o en la cesta
-    public void cambiarVista(View view) {
-
-        Button boton = findViewById(view.getId());
-        Log.i("PRUEBA", boton.getText().toString());
-        Log.i("PRUEBA", getString(R.string.btnCatalogo));
-
-        /*
-            si el botón tiene de texto 'catálogo' (o su valor equivalente, dependiendo del idioma),
-            quiere decir que tiene que mostrar el catálogo, ejecuta este bloque de código
-         */
-        if(boton.getText().toString().equals(getString(R.string.btnCatalogo))){
-
-            Log.i("PRUEBA", "ENTRA A CATALOGO");
-
-            //si el arrayList de productos está vacío no se carga
-            if(!productos.isEmpty()){
-
-                //muestra el switch con filtro, carga el recyclerView con el catálogo y cambia el texto del botón
-                mostrarSwitch();
-                cargarRecyclerViewCatalogo(productos);
-                boton.setText(getString(R.string.btnCesta));
-
-            }
-
-        } else {
-
-            /*
-                en el caso de que el texto no sea 'catálogo' (o su valor equivalente, dependiendo del idioma),
-                quiere decir que tiene que mostrar la cesta
-             */
-            Log.i("PRUEBA", "ENTRA A CESTA");
-
-            //si la cesta no está vacía ejecuta el bloque de código
-            if(!cesta.isEmpty()){
-
-                //oculta el switch, carga el recyclerView con los productos en la cesta y cambia el texto del botón
-                ocultarSwitch();
-                Log.e("Prueba", cesta.toString());
-                cargarRecyclerViewCesta(cesta);
-                boton.setText(getString(R.string.btnCatalogo));
-
-            } else {
-                //lanza toast de información en caso de estar la cesta vacía
-                Toast.makeText(MainActivity.this, getString(R.string.cestaVacia), Toast.LENGTH_SHORT).show();
             }
 
         }
