@@ -3,8 +3,10 @@
 
     <item
         android:id="@+id/itemCesta"
+        android:icon="@drawable/cesta"
         android:title="Cesta" />
     <item
         android:id="@+id/itemCatalogo"
+        android:icon="@drawable/catalogo"
         android:title="Catalogo" />
 </menu>
